@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h1>Weather Forecast - {{ city  }}</h1>
+    
+    {% for d in data %}
+    <p>{{d}}</p>
+    {% endfor %}    
+    
+{% endblock %}
