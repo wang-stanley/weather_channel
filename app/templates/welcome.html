@@ -3,24 +3,25 @@
 {% block title %}Welcome{% endblock %}
 
 {% block content %}
-<form action="{{ url_for('index') }}" method="POST">
-    <h1>
-        Stanley's Weather Channel
-    </h1>
-    {% if error %}
-    <p style="color:red">
-        {{ error }}
-    </p>
-    {% endif %}
-    
-    <p>
-        City: <input type="text" name="city" />
-    </p>
-    
-    
-    <button type="Submit" class="btn btn-default">Submit</button>
-    
-</form>
-
+<dev align=center>
+    <form action="{{ url_for('index') }}" method="POST">
+        <h1>
+            Stanley's Weather Channel
+        </h1>
+        {% if error %}
+        <p style="color:red">
+            {{ error }}
+        </p>
+        {% endif %}
+        
+        <p>
+            City: <input type="text" name="city" />
+        </p>
+        
+        
+        <button type="Submit" class="btn btn-default">Submit</button>
+        
+    </form>
+</dev>
 
 {% endblock %}
