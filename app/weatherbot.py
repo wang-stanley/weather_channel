@@ -1,77 +1,15 @@
-import requests, pprint, sys, json, pytz, tzlocal, time
-from tzlocal import get_localzone
+import requests
+import json
+from pprint import pprint as pp
 from datetime import datetime
+import pytz
+import tzlocal
+from tzlocal import get_localzone
 from src.json2xml import Json2xml
-
-
-class City(object):
-    def __init__(self, name, country, latitude, longitude):
-        self._name = name
-        self._country = country
-        self._latitude = latitude
-        self._longitude = longitude
-
-    @property
-    def name(self):
-        return self._name
-
-
-    @property
-    def country(self):
-        return self._country
-
-
-    @property
-    def latitude(self):
-        return self._latitude
-
-
-    @property
-    def longitude(self):
-        return self._longitude
-
-    def __str__(self):
-        return "{0.name}, {0.country}, (lat = {0.latitude}, lon = {0.longitude})".format(self)
-
-
-class WeatherDataPoint(object):
-    def __init__(self, item):
-        dt = datetime.fromtimestamp(item["dt"])
-        tz = get_localzone()
-        self._localTime = dt.astimezone(tz)
-
-
-        self._dt = item["dt"]
-        self._temp = self._Fahrenheit(item["main"]["temp"])
-        self._min_temp = self._Fahrenheit(item["main"]["temp_min"])
-        self._max_temp = self._Fahrenheit(item["main"]["temp_max"])
-
-    @property
-    def dt(self):
-        return self._dt
-
-
-    @property
-    def temp(self):
-        return self._temp
-
-
-    @property
-    def min_temp(self):
-        return self._min_temp
-
-
-    @property
-    def max_temp(self):
-        return self._max_temp
-
-
-    def _Fahrenheit(self, temp_k):
-        temp_f = 1.8 * (temp_k - 273.15) + 32
-        return temp_f
-
-    def __str__(self):
-        return("{0}\t{1:6.2f}\t{2:6.2f}\t{3:6.2f}".format(self._localTime.strftime("%Y/%m/%d, %I:%M:%p"), self._temp, self._min_temp, self._max_temp))
+from geopy import geocoders
+import os
+from app.models import *
+from app.sqlhelper import *
 
 
 class WeatherClient(object):
@@ -120,16 +58,23 @@ class WeatherClient(object):
 
 
     def _save(self):
-        self.saveToFileasJSON()
-        self.saveToFileasXML()
-
+        # self.saveToFileasJSON()
+        # self.saveToFileasXML()
+        sql = sqlhelper()
+        sql.insert_city(self._city)
+        for item in self._weatherTimeSeries:
+            sql.insert_weather_data(item)
+            
+        # print(sql.select_city(self._cityName))
+        # print(sql.select_weather_data())
+        
 
     def run(self):
         self._json_object = requests.get(self._URI).json()
-        self.saveToFileasJSON()
         self._setCity()
         self._setTimeSeries()
-        return self._weatherTimeSeries
+        self._save()
+        return self.weatherTimeSeries
 
 
     def display(self):

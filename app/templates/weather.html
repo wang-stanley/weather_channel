@@ -1,12 +1,41 @@
+<!doctype html>
+
+<script>
+    function goBack() {
+        window.history.back()
+    }
+</script>
+
 {% extends "base.html" %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Weather{% endblock %}
 
 {% block content %}
-    <h1>Weather Forecast - {{ city  }}</h1>
+    <h1 align=center>Weather Forecast - {{ city  }}</h1>
     
-    {% for d in data %}
-    <p>{{d}}</p>
-    {% endfor %}    
+    <!--{% for d in data %}-->
+    <!--<p>{{d[0]}} &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp {{d[1]}}</p>-->
+    <!--{% endfor %} -->
+    <button onclick="goBack()" class="btn btn-default center-block">Go Back</button>
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Temp</th>
+                    <th>Weather</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in data %}
+                <tr>
+                    <td>{{d[0]}}</td>
+                    <td>{{d[1]}}</td>
+                    <td>{{d[2]}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     
 {% endblock %}
